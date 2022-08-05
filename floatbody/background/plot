@@ -1,0 +1,26 @@
+#!/bin/sh
+
+
+LOG=log.interFoam
+if [ -d data ]
+then
+    rm -f data/*.dat
+else
+    mkdir -p data
+fi
+
+#extract motion data and time list in log files
+grep 'Time = ' $LOG | grep -v 'ClockTime' |cut -c 8- > ./data/time.dat  
+#grep 'Sway (cm)' $LOG     | cut -c 16- |sed -n '6~6p' > ./data/sway   
+grep 'Centre of rotation' $LOG | cut -c 25- | tr -d '(' | tr -d ')'  > ./data/CoMTemp.dat
+grep 'Linear velocity' $LOG | cut -c 23- | tr -d '(' | tr -d ')' > ./data/LinearVelocityTemp.dat
+grep 'Angular velocity ' $LOG   | cut -c 24- | tr -d '(' | tr -d ')' > ./data/AngularvelocityTemp.dat
+
+cd data
+paste time.dat CoMTemp.dat > CoM.dat
+paste time.dat LinearVelocityTemp.dat > LinearVelocity.dat
+paste time.dat AngularvelocityTemp.dat > Angularvelocity.dat
+# sed -i '1iTime x y z' CoM.dat
+rm *Temp.dat
+#------------------------------------------------------------------------------
+

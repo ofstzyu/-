@@ -1,0 +1,16 @@
+cp -r 0.org 0
+
+blockMesh|tee log.bm
+
+setWaveParameters
+
+setWaveField
+
+waveGaugesNProbes 
+
+decomposePar 
+
+
+mpirun -np 16 waveFoam -parallel
+
+reconstructPar
